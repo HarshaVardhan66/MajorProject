@@ -13,7 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Data Uploaded</title>
+  <title>Trained Successfully</title>
   <link rel="stylesheet" href="{% static 'FaceDetect/style.css' %}">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
@@ -41,12 +41,11 @@
 </nav>
 <br>
 
-<div class="col-5 offset-3 jumbotron">
-  <h2 class="text-success">Face Data Uploaded Successfully!!</h2>
-Already Trained faces : {{ trained }} <br><br>
-No. of faces remaining to be trained : {{ remaining }}<br><br>
-  <a href="http://127.0.0.1:8000/facedetect/services/upload/" class="btn btn-primary">Add Another Face</a>
-  <a href="{% url 'facedetect:train' %}" class="btn btn-danger offset-1">Train the Model</a>
+<div class="col-6 offset-3 jumbotron">
+  <h2 class="text-success">Model Trained Successfully!!</h2><br><br>
+  Total Trained faces : {{ trained }}.<br><br>
+  <a href="http://127.0.0.1:8000/facedetect/services/upload/" class="btn btn-primary">Add More Faces</a>
+  <a href="{% url 'facedetect:recognise' %}" class="btn btn-danger offset-1">Recognise Faces</a>
 </div>
 </body>
 </html>
