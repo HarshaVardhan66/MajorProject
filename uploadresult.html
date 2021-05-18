@@ -43,8 +43,8 @@
 
 <div class="col-5 offset-3 jumbotron">
   <h2 class="text-success">Face Data Uploaded Successfully!!</h2>
-Already Trained faces : {{ trained }} <br>
-No. of faces remaining to be trained : {{ remaining }}<br>
+Already Trained faces : {{ trained }} <br><br>
+No. of faces remaining to be trained : {{ remaining }}<br><br>
   <a href="http://127.0.0.1:8000/facedetect/services/upload/" class="btn btn-primary">Add Another Face</a>
   <a href="{% url 'facedetect:train' %}" class="btn btn-danger offset-1">Train the Model</a>
 </div>
