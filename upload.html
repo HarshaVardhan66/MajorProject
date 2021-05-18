@@ -40,9 +40,9 @@
   </div>
 </nav>
 <br>
-<div class="col-4 offset-4 card border-secondary" style="background-color: #81bcf1;">
+<div class="col-6 offset-3 card border-secondary" style="background-color: #E9ECEF;">
     <div class="card-title"><b><h4>Fill This Form To Upload Face Data</h4></b></div>
-    <div class="card-body text-light" style="background-color:#151019;">
+    <div class="card-body text-light" style="background-color:#343a40;">
         <form  action="{% url 'facedetect:LiveCapture' %}" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="susn">Suspect Name</label>
@@ -68,14 +68,14 @@
             </div>
             <div class="form-group">
                 <label for="live">Click to Capture Photos now</label>
-                <input type="submit" class="btn btn-outline-info" id="live" value="Live Capture">
+                <input type="submit" class="btn btn-outline-light" id="live" value="Live Capture">
             </div>
             <div class="form-group">
                 <label for="custom">Or to Upload a Video (max of 5 seconds)</label>
-                <input type="file" class="btn btn-outline-info" id="custom" name="video" accept="video/*"><br>
+                <input type="file" class="btn btn-outline-light" id="custom" name="video" accept="video/*"><br>
             </div>
             <div class="form-group">
-                <input type="submit" formaction="{% url 'facedetect:VideoSubmit' %}" class="btn btn-outline-info" value="Submit Video">
+                <input type="submit" formaction="{% url 'facedetect:VideoSubmit' %}" class="btn btn-outline-light" value="Submit Video">
             </div>
         </form>
     </div>
