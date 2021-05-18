@@ -40,13 +40,13 @@
   </div>
 </nav>
 <br>
-<div class="col-5 offset-3 card bg-info">
+<div class="col-6 offset-3 jumbotron">
   <div class="card-body"><h5>
-    Already Trained faces : {{ trained }} <br>
-    No. of faces remaining to be trained : {{ remaining }}<br>
+    Already Trained faces : {{ trained }} <br><br>
+    No. of faces remaining to be trained : {{ remaining }}<br><br>
 
     {% if remaining == 0 %}
-      No Additional Training Required. Please add faces to train<br>
+      No Additional Training Required, Please add faces to train<br><br>
       <a href="http://127.0.0.1:8000/facedetect/services/upload/" class="btn btn-success">Add More Faces</a>
     {% endif %}
 
