@@ -48,13 +48,13 @@
     Total Non-Suspects Detected : {{ non_sus }}<br>
   </div>
   <div class="text-danger">
-    Suspects Details : <br>
+    <br>Suspects Details : <br>
     {% for key, value in sus_detected.items %}
       ID : {{key}} Name: {{value}}<br>
     {% endfor %}
   </div>
   <div class="text-primary">
-    Non-Suspects Details : <br>
+    <br>Non-Suspects Details : <br>
     {% for key, value in non_sus_detected.items %}
       ID : {{key}} Name: {{value}}<br>
     {% endfor %}
