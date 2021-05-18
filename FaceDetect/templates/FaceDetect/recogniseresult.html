@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <style>
+  body  {
+  background-image: url("{% static 'FaceDetect/backkground.jpg' %}");
+  }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Recognise</title>
+  <link rel="stylesheet" href="{% static 'FaceDetect/style.css' %}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body class="body">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="http://127.0.0.1:8000/facedetect/"><img src="{% static 'FaceDetect/logo.jpeg' %}" style="height:50px;width:70px" alt="Suspect Detection System"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="http://127.0.0.1:8000/facedetect/">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="http://127.0.0.1:8000/facedetect/services">Services</a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+<br>
+
+<div class="col-4 offset-4 jumbotron" style="border-style:solid;"><h5>
+  <div>
+    Total no. of faces Detected : {{tot}} <br>
+    Total Suspects Detected : {{ sus }}<br>
+    Total Non-Suspects Detected : {{ non_sus }}<br>
+  </div>
+  <div class="text-danger">
+    <br>Suspects Details : <br>
+    {% for key, value in sus_detected.items %}
+      ID : {{key}} Name: {{value}}<br>
+    {% endfor %}
+  </div>
+  <div class="text-primary">
+    <br>Non-Suspects Details : <br>
+    {% for key, value in non_sus_detected.items %}
+      ID : {{key}} Name: {{value}}<br>
+    {% endfor %}
+  </div><br>
+  <div><a href="{% url 'facedetect:recognise' %}" class="btn btn-danger ">Recognise Again</a></div>
+</h5></div>
+</body>
+</html>
