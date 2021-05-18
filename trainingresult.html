@@ -41,9 +41,9 @@
 </nav>
 <br>
 
-<div class="col-5 offset-3 jumbotron">
-  <h2 class="text-success">Model Trained Successfully!!</h2><br>
-  Total Trained faces : {{ trained }}.<br>
+<div class="col-6 offset-3 jumbotron">
+  <h2 class="text-success">Model Trained Successfully!!</h2><br><br>
+  Total Trained faces : {{ trained }}.<br><br>
   <a href="http://127.0.0.1:8000/facedetect/services/upload/" class="btn btn-primary">Add More Faces</a>
   <a href="{% url 'facedetect:recognise' %}" class="btn btn-danger offset-1">Recognise Faces</a>
 </div>
