@@ -1,6 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from django.views.decorators.csrf import csrf_exempt
 from sklearn.preprocessing import Normalizer
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.cache import cache
 from keras.models import load_model
@@ -9,12 +10,13 @@ from numpy import expand_dims
 from sklearn.svm import SVC
 from .models import Susinfo
 from numpy import asarray
-from PIL import Image
-import numpy as np
 import joblib
 import cv2
 import os
+import sys
 
+g_path = sys.path[0]
+g_path = g_path.replace('\\', '/')
 
 def homepage(request):
     cache.clear()
@@ -40,10 +42,10 @@ def upload(request):
 def live_capture(request):
     data = request.POST
     cap = cv2.VideoCapture(0)
-
-    faceCascade = cv2.CascadeClassifier('E:\\MajorProject\\FaceDetect\\Cascades\\haarcascade_frontalface_default.xml')
+    path = g_path + '/FaceDetect/Cascades/haarcascade_frontalface_default.xml'
+    faceCascade = cv2.CascadeClassifier(path)
     i = 1
-
+    path = g_path + '/FaceDetect/Faces/'
     while cap.isOpened():
         ret, img = cap.read()
         if ret:
@@ -59,7 +61,8 @@ def live_capture(request):
 
             cv2.imshow('video', img)
             if flag == 1:
-                cv2.imwrite('E:\\MajorProject\\FaceDetect\\Faces\\' + str(data['sus_id']) + '.' + str(i) + '.jpg',
+
+                cv2.imwrite(path + str(data['sus_id']) + '.' + str(i) + '.jpg',
                             cv2.resize(face, (160, 160)))
                 i += 1
             if i > 50 or cv2.waitKey(10) == 27 & 0xff:
@@ -79,14 +82,15 @@ def live_capture(request):
     suspect.isSuspect = data['check']
     suspect.save()
 
-    f = open("E:\\MajorProject\\trainingdetails.txt", "r")
+    path = g_path + '/trainingdetails.txt'
+    f = open(path, "r")
     s = f.read()
     f.close()
 
     l = [x for x in s.split('.')]
     s = l[0] + '.' + str(int(l[1]) + 1)
 
-    f = open("E:\\MajorProject\\trainingdetails.txt", "w")
+    f = open(path, "w")
     f.write(s)
     f.close()
 
@@ -103,10 +107,12 @@ def video_submit(request):
 
     fs = FileSystemStorage()
     fs.save(filename, video_file)
-    cap = cv2.VideoCapture('E:\\MajorProject\\media\\' + filename)
-    faceCascade = cv2.CascadeClassifier('E:\\MajorProject\\FaceDetect\\Cascades\\haarcascade_frontalface_default.xml')
-    i = 1
 
+    cap = cv2.VideoCapture(g_path+'/media/' + filename)
+    path = g_path + '/FaceDetect/Cascades/haarcascade_frontalface_default.xml'
+    faceCascade = cv2.CascadeClassifier(path)
+    i = 1
+    path = g_path + '/FaceDetect/Faces/'
     while cap.isOpened():
         ret, img = cap.read()
         if ret:
@@ -122,7 +128,7 @@ def video_submit(request):
 
             cv2.imshow('video', img)
             if flag == 1:
-                cv2.imwrite('E:\\MajorProject\\FaceDetect\\Faces\\' + str(data['sus_id']) + '.' + str(i) + '.jpg',
+                cv2.imwrite(path + str(data['sus_id']) + '.' + str(i) + '.jpg',
                             cv2.resize(face, (160, 160)))
                 i += 1
             if i > 50 or cv2.waitKey(10) == 27 & 0xff:
@@ -140,15 +146,15 @@ def video_submit(request):
     suspect.phone = data['auth_phone']
     suspect.isSuspect = data['check']
     suspect.save()
-
-    f = open("E:\\MajorProject\\trainingdetails.txt", "r")
+    path = g_path + '/trainingdetails.txt'
+    f = open(path, "r")
     s = f.read()
     f.close()
 
     l = [x for x in s.split('.')]
     s = l[0] + '.' + str(int(l[1]) + 1)
 
-    f = open("E:\\MajorProject\\trainingdetails.txt", "w")
+    f = open(path, "w")
     f.write(s)
     f.close()
 
@@ -158,7 +164,8 @@ def video_submit(request):
 
 @csrf_exempt
 def train(request):
-    f = open("E:\\MajorProject\\trainingdetails.txt", "r")
+    path = g_path + '/trainingdetails.txt'
+    f = open(path, "r")
     s = f.read()
     f.close()
     li = [x for x in s.split('.')]
@@ -183,12 +190,13 @@ def trainingresult(request):
 
     images = []
     trainy = []
-    for path in os.listdir('E:\\MajorProject\\FaceDetect\\Faces'):
-        img = cv2.imread('E:\\MajorProject\\FaceDetect\\Faces\\' + path)
+    path = g_path+'/FaceDetect/Faces/'
+    for i_path in os.listdir(path):
+        img = cv2.imread(path + i_path)
         images.append(img)
-        trainy.append(int(os.path.split(path)[-1].split(".")[0]))
+        trainy.append(int(os.path.split(i_path)[-1].split(".")[0]))
     images = asarray(images)
-    model = load_model('E:\\MajorProject\\FaceDetect\\facenet_keras.h5')
+    model = load_model(g_path+'/FaceDetect/facenet_keras.h5')
     newimages = []
 
     for face in images:
@@ -203,13 +211,14 @@ def trainingresult(request):
     model = SVC(kernel='linear', probability=True)
     model.fit(trainX, trainy)
     joblib.dump(model, 'Recognizer.sav')
-    f = open("E:\\MajorProject\\trainingdetails.txt", "r")
+    path = g_path + '/trainingdetails.txt'
+    f = open(path, "r")
     s = f.read()
     f.close()
     l = [x for x in s.split('.')]
     a = int(l[0]) + int(l[1])
     s = str(int(l[1]) + int(l[0])) + '.' + str(0)
-    f = open("E:\\MajorProject\\trainingdetails.txt", "w")
+    f = open(path, "w")
     f.write(s)
     f.close()
 
@@ -244,9 +253,9 @@ def recognise(request):
         print(id, prob)
         return id[0], prob[0, id - 1] * 100
 
-    model = joblib.load('E:\\MajorProject\\Recognizer.sav')
-    facenet_model = load_model('E:\\MajorProject\\FaceDetect\\facenet_keras.h5')
-    cascadePath = 'E:\\MajorProject\\FaceDetect\\Cascades\\haarcascade_frontalface_default.xml'
+    model = joblib.load(g_path+'/Recognizer.sav')
+    facenet_model = load_model(g_path+'/FaceDetect/facenet_keras.h5')
+    cascadePath = g_path+'/FaceDetect/Cascades/haarcascade_frontalface_default.xml'
     faceCascade = cv2.CascadeClassifier(cascadePath)
     font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -284,20 +293,23 @@ def recognise(request):
             if id in sus_ids:
                 if id not in sus_detected:
                     acc_sid = "AC361b640ba71f76a616d917cd84e6fbac"
-                    auth = "759a9c0971b477970fb3f3012338cd3c"
+                    auth = ""
                     client = Client(acc_sid, auth)
+                    auth_no = '+91'+ Susinfo.objects.get(susid=str(id)).phone
                     client.messages.create(from_="+18329063590",
                                            body="!!! The " + names[id] + "-" + str(id) + " is spotted !!!",
-                                           to="+919866530705")
+                                           to=auth_no)
 
                     sus_detected.append(id)
                 cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
             else:
                 if id not in non_sus_detected:
-                    non_sus_detected.append(id)
-
-            cv2.putText(img, names[id]+'-'+str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
+                    if id != 0:
+                        non_sus_detected.append(id)
+            if id == 0:
+                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.putText(img, names[id]+':'+str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
             cv2.putText(img, str(prob), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
 
         cv2.imshow('camera', img)
@@ -318,3 +330,7 @@ def recognise(request):
     di = {'sus_detected': sus_details, 'non_sus_detected': non_sus_details,
           'tot': len(sus_detected) + len(non_sus_detected), 'sus': len(sus_detected), 'non_sus': len(non_sus_detected)}
     return render(request, 'FaceDetect/recogniseresult.html', context=di)
+
+
+def test(request):
+    return HttpResponse(g_path)
