@@ -329,7 +329,3 @@ def recognise(request):
     di = {'sus_detected': sus_details, 'non_sus_detected': non_sus_details,
           'tot': len(sus_detected) + len(non_sus_detected), 'sus': len(sus_detected), 'non_sus': len(non_sus_detected)}
     return render(request, 'FaceDetect/recogniseresult.html', context=di)
-
-
-def test(request):
-    return HttpResponse(g_path)
