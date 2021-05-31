@@ -1,22 +1,23 @@
-from django.core.files.storage import FileSystemStorage
-from django.views.decorators.csrf import csrf_exempt
-from sklearn.preprocessing import Normalizer
-from django.http import HttpResponse
+import os
+import sys
+import cv2
+import joblib
+from numpy import asarray
+from .models import Susinfo
+from sklearn.svm import SVC
+from numpy import expand_dims
+from twilio.rest import Client
 from django.shortcuts import render
 from django.core.cache import cache
 from keras.models import load_model
-from twilio.rest import Client
-from numpy import expand_dims
-from sklearn.svm import SVC
-from .models import Susinfo
-from numpy import asarray
-import joblib
-import cv2
-import os
-import sys
+from django.http import HttpResponse
+from sklearn.preprocessing import Normalizer
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 
 g_path = sys.path[0]
 g_path = g_path.replace('\\', '/')
+
 
 def homepage(request):
     cache.clear()
@@ -61,7 +62,6 @@ def live_capture(request):
 
             cv2.imshow('video', img)
             if flag == 1:
-
                 cv2.imwrite(path + str(data['sus_id']) + '.' + str(i) + '.jpg',
                             cv2.resize(face, (160, 160)))
                 i += 1
@@ -108,7 +108,7 @@ def video_submit(request):
     fs = FileSystemStorage()
     fs.save(filename, video_file)
 
-    cap = cv2.VideoCapture(g_path+'/media/' + filename)
+    cap = cv2.VideoCapture(g_path + '/media/' + filename)
     path = g_path + '/FaceDetect/Cascades/haarcascade_frontalface_default.xml'
     faceCascade = cv2.CascadeClassifier(path)
     i = 1
@@ -175,7 +175,6 @@ def train(request):
 
 @csrf_exempt
 def trainingresult(request):
-
     def get_embedding(model, face_pixels):
         # scale pixel values
         face_pixels = face_pixels.astype('float32')
@@ -190,13 +189,13 @@ def trainingresult(request):
 
     images = []
     trainy = []
-    path = g_path+'/FaceDetect/Faces/'
+    path = g_path + '/FaceDetect/Faces/'
     for i_path in os.listdir(path):
         img = cv2.imread(path + i_path)
         images.append(img)
         trainy.append(int(os.path.split(i_path)[-1].split(".")[0]))
     images = asarray(images)
-    model = load_model(g_path+'/FaceDetect/facenet_keras.h5')
+    model = load_model(g_path + '/FaceDetect/facenet_keras.h5')
     newimages = []
 
     for face in images:
@@ -253,9 +252,9 @@ def recognise(request):
         print(id, prob)
         return id[0], prob[0, id - 1] * 100
 
-    model = joblib.load(g_path+'/Recognizer.sav')
-    facenet_model = load_model(g_path+'/FaceDetect/facenet_keras.h5')
-    cascadePath = g_path+'/FaceDetect/Cascades/haarcascade_frontalface_default.xml'
+    model = joblib.load(g_path + '/Recognizer.sav')
+    facenet_model = load_model(g_path + '/FaceDetect/facenet_keras.h5')
+    cascadePath = g_path + '/FaceDetect/Cascades/haarcascade_frontalface_default.xml'
     faceCascade = cv2.CascadeClassifier(cascadePath)
     font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -295,7 +294,7 @@ def recognise(request):
                     acc_sid = "AC361b640ba71f76a616d917cd84e6fbac"
                     auth = ""
                     client = Client(acc_sid, auth)
-                    auth_no = '+91'+ Susinfo.objects.get(susid=str(id)).phone
+                    auth_no = '+91' + Susinfo.objects.get(susid=str(id)).phone
                     client.messages.create(from_="+18329063590",
                                            body="!!! The " + names[id] + "-" + str(id) + " is spotted !!!",
                                            to=auth_no)
@@ -309,7 +308,7 @@ def recognise(request):
                         non_sus_detected.append(id)
             if id == 0:
                 cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            cv2.putText(img, names[id]+':'+str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
+            cv2.putText(img, names[id] + ':' + str(id), (x + 5, y - 5), font, 1, (255, 255, 255), 2)
             cv2.putText(img, str(prob), (x + 5, y + h - 5), font, 1, (255, 255, 0), 1)
 
         cv2.imshow('camera', img)
