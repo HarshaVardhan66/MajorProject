@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<style>
+  body  {
+  background-image: url("{% static 'FaceDetect/backkground.jpg' %}");
+  }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Upload Data</title>
+  <link rel="stylesheet" href="{% static 'FaceDetect/style.css' %}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<script type="text/javascript">
+    function validation()
+    {
+        var a = document.form.sus_name.value;
+        if(a=="")
+        {
+            alert("Please enter suspect Name");
+            document.form.sus_name.focus();
+            return false;
+        }
+
+        var a = document.form.sus_id.value;
+        if(a=="")
+        {
+            alert("Please enter suspect id");
+            document.form.sus_id.focus();
+            return false;
+        }
+
+        var a = document.form.auth_name.value;
+        if(a=="")
+        {
+            alert("Please enter authority name");
+            document.form.auth_name.focus();
+            return false;
+        }
+
+        var a = document.form.auth_phone.value;
+        if(a=="")
+        {
+            alert("Please enter authority phone number");
+            document.form.auth_phone.focus();
+            return false;
+        }
+
+    }
+</script>
+</head>
+<body class="body">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="http://127.0.0.1:8000/facedetect/"><img src="{% static 'FaceDetect/logo.jpeg' %}" style="height:50px;width:70px" alt="Suspect Detection System"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="http://127.0.0.1:8000/facedetect/">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="http://127.0.0.1:8000/facedetect/services">Services</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="http://127.0.0.1:8000/facedetect/howto">How to <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+<br>
+<div class="col-6 offset-3 card border-secondary" style="background-color: #E9ECEF;">
+    <div class="card-title"><b><h4>Fill This Form To Upload Face Data</h4></b></div>
+    <div class="card-body text-light" style="background-color:#343a40;">
+        <form  action="{% url 'facedetect:LiveCapture' %}" method="post" enctype="multipart/form-data" name="form" onsubmit="return validation()">
+            <div class="form-group">
+                <label for="susn">Suspect Name</label>
+                <input type="text" class="form-control" id="susn" name="sus_name" placeholder="Enter Suspect Name" >
+            </div>
+            <div class="form-group">
+                <label for="susid">Supect Id</label>
+                <input type="number" class="form-control" id="susid" name="sus_id" placeholder="Enter Suspect ID">
+            </div>
+            <div class="form-group">
+                <label for="authname">Authority Name</label>
+                <input type="text" class="form-control" id="authname" name="auth_name" placeholder="Enter Authority" >
+            </div>
+            <div class="form-group">
+                <label for="authph">Authority Phone</label>
+                <input type="number" class="form-control" id="authph" name="auth_phone" placeholder="Enter Authority Phone No.">
+            </div>
+            <div class="form-group">
+                <input type="radio" id="checksus" name="check" value="yes">
+                <label for="checksus">Is a Suspect</label>
+                <input type="radio" id="checknosus" name="check" value="no" checked>
+                <label for="checknosus">Not a Suspect</label>
+            </div>
+            <div class="form-group">
+                <label for="live">Click to Capture Photos now</label>
+                <input type="submit" class="btn btn-outline-light" id="live" value="Live Capture">
+            </div>
+            <div class="form-group">
+                <label for="custom">Or to Upload a Video (max of 5 seconds)</label>
+                <input type="file" class="btn btn-outline-light" id="custom" name="video" accept="video/*"><br>
+            </div>
+            <div class="form-group">
+                <input type="submit" formaction="{% url 'facedetect:VideoSubmit' %}" class="btn btn-outline-light" value="Submit Video">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
